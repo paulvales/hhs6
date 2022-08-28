@@ -52,6 +52,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
+    #[ORM\Column(type: 'integer')]
+    private ?string $hide = null;
+
+    #[ORM\Column(type: 'string')]
+    private ?string $phone = '';
+
+    #[ORM\Column(type: 'string')]
+    private ?string $birth = '';
+
+    #[ORM\Column(type: 'string')]
+    private ?string $dtend = '';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -122,6 +134,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
     }
 
+    public function getRolesString(): string
+    {
+        $roles = $this->roles;
+
+        return $roles ? implode(',', array_unique($roles)) : '';
+    }
+
     /**
      * Returns the salt that was originally used to encode the password.
      *
@@ -157,5 +176,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->id, $this->username, $this->password] = $data;
+    }
+
+    /**
+     * @return int|string|null
+     */
+    public function getHide(): int|string|null
+    {
+        return $this->hide;
+    }
+
+    /**
+     * @param int|string|null $hide
+     */
+    public function setHide(int|string|null $hide): void
+    {
+        $this->hide = $hide;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string|null $phone
+     */
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBirth(): ?string
+    {
+        return $this->birth;
+    }
+
+    /**
+     * @param string|null $birth
+     */
+    public function setBirth(?string $birth): void
+    {
+        $this->birth = $birth;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDtend(): ?string
+    {
+        return $this->dtend;
+    }
+
+    /**
+     * @param string|null $dtend
+     */
+    public function setDtend(?string $dtend): void
+    {
+        $this->dtend = $dtend;
     }
 }

@@ -5,10 +5,17 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_core-js_internals_fix-regexp-well-known-symbol-logic_js-node_modules_cor-9651c3.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_j-121598.js",
-        "/build/vendors-node_modules_core-js_internals_array-method-is-strict_js-node_modules_core-js_interna-ee9dd4.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_st-7418de.js",
+        "/build/vendors-node_modules_core-js_internals_inherit-if-required_js-node_modules_core-js_internals_-3763a7.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_replace_js-node_modules_core-js_modules_es_str-2739c0.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_moment_locale_af_js-node_m-d44b0b.js",
+        "/build/vendors-node_modules_core-js_internals_define-built-in-accessor_js-node_modules_core-js_inter-d43229.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_includes_js-node_modules_core-js_modules_es_obj-0254a1.js",
         "/build/app.js"
+      ],
+      "css": [
+        "/build/vendors-node_modules_core-js_modules_es_array_includes_js-node_modules_core-js_modules_es_obj-0254a1.css",
+        "/build/app.css"
       ]
     },
     "login": {
@@ -23,7 +30,8 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_bootstrap-tagsinput_dist_bootstrap-tagsinput_js-node_modules_core-js_mod-c78b2d.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_moment_locale_af_js-node_m-d44b0b.js",
+        "/build/vendors-node_modules_bootstrap-tagsinput_dist_bootstrap-tagsinput_js-node_modules_eonasdan-bo-37c4b5.js",
         "/build/admin.js"
       ],
       "css": [
@@ -35,7 +43,6 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_core-js_internals_fix-regexp-well-known-symbol-logic_js-node_modules_cor-9651c3.js",
         "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_st-7418de.js",
         "/build/vendors-node_modules_core-js_modules_es_string_replace_js-node_modules_core-js_modules_es_str-a015d2.js",
         "/build/search.js"
@@ -48,6 +55,15 @@
       ],
       "css": [
         "/build/login_css.css"
+      ]
+    },
+    "app_css": {
+      "js": [
+        "/build/runtime.js",
+        "/build/app_css.js"
+      ],
+      "css": [
+        "/build/app_css.css"
       ]
     },
     "fomantic_styles": {
@@ -64,11 +80,11 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_core-js_internals_fix-regexp-well-known-symbol-logic_js-node_modules_cor-9651c3.js",
         "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_st-7418de.js",
         "/build/vendors-node_modules_core-js_internals_inherit-if-required_js-node_modules_core-js_internals_-3763a7.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_j-121598.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_array-7be1b6.js",
+        "/build/vendors-node_modules_core-js_modules_es_string_replace_js-node_modules_core-js_modules_es_str-2739c0.js",
+        "/build/vendors-node_modules_core-js_internals_define-built-in-accessor_js-node_modules_core-js_inter-d43229.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_find_js-node_modules_core-js_modules_es_array_r-b3f60b.js",
         "/build/fomantic_javascripts.js"
       ]
     },
@@ -77,11 +93,10 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_core-js_internals_fix-regexp-well-known-symbol-logic_js-node_modules_cor-9651c3.js",
         "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_st-7418de.js",
         "/build/vendors-node_modules_core-js_internals_inherit-if-required_js-node_modules_core-js_internals_-3763a7.js",
-        "/build/vendors-node_modules_core-js_modules_es_array_every_js-node_modules_core-js_modules_es_array_-27836c.js",
         "/build/vendors-node_modules_core-js_modules_es_string_replace_js-node_modules_core-js_modules_es_str-2739c0.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_every_js-node_modules_core-js_modules_es_array_-27836c.js",
         "/build/users.js"
       ]
     },
@@ -90,7 +105,6 @@
         "/build/runtime.js",
         "/build/vendors-node_modules_jquery_dist_jquery_js.js",
         "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-dd2802.js",
-        "/build/vendors-node_modules_core-js_internals_fix-regexp-well-known-symbol-logic_js-node_modules_cor-9651c3.js",
         "/build/vendors-node_modules_core-js_modules_es_string_iterator_js-node_modules_core-js_modules_es_st-7418de.js",
         "/build/vendors-node_modules_core-js_internals_inherit-if-required_js-node_modules_core-js_internals_-3763a7.js",
         "/build/vendors-node_modules_core-js_modules_es_array_every_js-node_modules_core-js_modules_es_array_-27836c.js",

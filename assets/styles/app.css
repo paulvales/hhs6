@@ -1,0 +1,12 @@
+body {
+  background-color: lightgray;
+}
+
+#generalmenu > a.toc.item {
+  display: none;
+}
+@media screen and (max-width: 760px) {
+  #generalmenu > a.toc.item {
+    display: flex;
+  }
+}

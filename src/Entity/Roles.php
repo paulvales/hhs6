@@ -2,19 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\RolesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\RolesRepository")
- */
+#[ORM\Entity(repositoryClass: RolesRepository::class)]
+#[ORM\Table(name: 'partners')]
 class Roles
 {
 
-
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
     /**

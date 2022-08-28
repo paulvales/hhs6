@@ -13,6 +13,7 @@ Encore
     .setPublicPath('/build')
     .cleanupOutputBeforeBuild()
     .autoProvidejQuery()
+
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
@@ -28,6 +29,7 @@ Encore
     .addEntry('search', './assets/search.js')
 
     .addEntry('login_css', './assets/styles/login.css')
+    .addEntry('app_css', './assets/styles/app.css')
     .addEntry('fomantic_styles', './assets/fomantic/dist/semantic.min.css')
     .addEntry('fomantic_javascripts', './assets/fomantic/dist/semantic.min.js')
     .addEntry('users', './assets/js/users.js')

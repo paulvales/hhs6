@@ -2,37 +2,27 @@
 
 namespace App\Entity;
 
+use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-/**
- * Client
- *
- * @ORM\Table(name="client", uniqueConstraints={@ORM\UniqueConstraint(name="phone", columns={"phone"})}, indexes={@ORM\Index(name="id", columns={"id"})})
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
- */
+
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\Table(name: 'client')]
+#[UniqueEntity(fields: ['phone'], message: 'There is already an account with this phone')]
 class Client
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="fio", type="string", length=255, nullable=false)
-     */
+
+    #[ORM\Column(type: 'string',length: 255)]
     public $fio;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
-     */
+
+    #[ORM\Column(type: 'string',length: 255)]
     public $phone;
 
     /**

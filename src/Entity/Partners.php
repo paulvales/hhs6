@@ -2,23 +2,17 @@
 
 namespace App\Entity;
 
+use App\Repository\PartnersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Partners
- *
- * @ORM\Table(name="partners")
- * @ORM\Entity(repositoryClass="App\Repository\PartnersRepository")
- */
+
+#[ORM\Entity(repositoryClass: PartnersRepository::class)]
+#[ORM\Table(name: 'partners')]
 class Partners
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
     /**

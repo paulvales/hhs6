@@ -2,30 +2,26 @@
 
 namespace App\Entity;
 
+use App\Repository\OrdersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Orders
  *
  * @ORM\Table(name="orders", indexes={@ORM\Index(name="id", columns={"id"}), @ORM\Index(name="user", columns={"user"}), @ORM\Index(name="idclient", columns={"idclient"}), @ORM\Index(name="ot", columns={"ot"}), @ORM\Index(name="idflat", columns={"idflat"})})
- * @ORM\Entity(repositoryClass="App\Repository\OrdersRepository")
  */
+#[ORM\Entity(repositoryClass: OrdersRepository::class)]
+#[ORM\Table(name: 'orders')]
+#[UniqueEntity(fields: ['phone'], message: 'There is already an account with this phone')]
 class Orders
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="idclient", type="integer", nullable=false)
-     */
+    #[ORM\Column(type: 'integer')]
     public $idclient;
 
     /**
@@ -35,25 +31,16 @@ class Orders
      */
     public $idflat;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="adres", type="string", length=255, nullable=false)
-     */
+
+    #[ORM\Column(type: 'string')]
     public $adres;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="arrival", type="datetime", nullable=false)
-     */
+
+    #[ORM\Column(type: 'datetime_immutable')]
     public $arrival;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="departure", type="datetime", nullable=false)
-     */
+
+    #[ORM\Column(type: 'datetime_immutable')]
     public $departure;
 
     /**
@@ -61,6 +48,7 @@ class Orders
      *
      * @ORM\Column(name="summ", type="integer", nullable=false, options={"comment"="Сумма при создании прикрепления, на всякий случай"})
      */
+    #[ORM\Column(type: 'integer')]
     public $summ = '0';
 
     /**
@@ -68,6 +56,7 @@ class Orders
      *
      * @ORM\Column(name="sale", type="integer", nullable=false)
      */
+    #[ORM\Column(type: 'integer')]
     public $sale;
 
     /**
@@ -75,6 +64,7 @@ class Orders
      *
      * @ORM\Column(name="itogo", type="integer", nullable=false)
      */
+    #[ORM\Column(type: 'integer')]
     public $itogo;
 
     /**
@@ -82,6 +72,7 @@ class Orders
      *
      * @ORM\Column(name="dolg", type="integer", nullable=false, options={"comment"="Динамическое значение"})
      */
+    #[ORM\Column(type: 'integer')]
     public $dolg;
 
     /**
@@ -89,6 +80,7 @@ class Orders
      *
      * @ORM\Column(name="oplata", type="integer", nullable=false)
      */
+    #[ORM\Column(type: 'integer')]
     public $oplata = '0';
 
     /**
@@ -96,6 +88,7 @@ class Orders
      *
      * @ORM\Column(name="from_go", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(type: 'string')]
     public $fromGo;
 
     /**
@@ -103,6 +96,7 @@ class Orders
      *
      * @ORM\Column(name="user", type="integer", nullable=false)
      */
+    #[ORM\Column(type: 'integer')]
     public $user;
 
     /**
@@ -110,6 +104,7 @@ class Orders
      *
      * @ORM\Column(name="ot", type="string", length=255, nullable=false, options={"comment"="от кого клиент"})
      */
+    #[ORM\Column(type: 'string')]
     public $ot;
 
     /**
@@ -117,6 +112,7 @@ class Orders
      *
      * @ORM\Column(name="zalog", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string')]
     public $zalog;
 
     /**
@@ -124,6 +120,7 @@ class Orders
      *
      * @ORM\Column(name="priceday", type="integer", nullable=false)
      */
+    #[ORM\Column(type: 'integer')]
     public $priceday;
 
     /**
@@ -131,6 +128,7 @@ class Orders
      *
      * @ORM\Column(name="currency", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string')]
     public $currency;
 
     /**
@@ -138,6 +136,7 @@ class Orders
      *
      * @ORM\Column(name="zalogsumm", type="integer", nullable=false, options={"comment"="Сумма залога"})
      */
+    #[ORM\Column(type: 'integer')]
     public $zalogsumm = '0';
 
     /**
@@ -145,6 +144,7 @@ class Orders
      *
      * @ORM\Column(name="comment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(type: 'text')]
     public $comment;
 
     /**
@@ -152,6 +152,7 @@ class Orders
      *
      * @ORM\Column(name="negative", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(type: 'string')]
     public $negative;
 
     /**
@@ -159,6 +160,7 @@ class Orders
      *
      * @ORM\Column(name="fordel", type="boolean", nullable=false)
      */
+    #[ORM\Column(type: 'boolean')]
     public $fordel = '0';
 
     /**
@@ -166,6 +168,7 @@ class Orders
      *
      * @ORM\Column(name="ok", type="boolean", nullable=false)
      */
+    #[ORM\Column(type: 'boolean')]
     public $ok = '0';
 
     /**
@@ -173,6 +176,7 @@ class Orders
      *
      * @ORM\Column(name="ndog", type="string", length=100, nullable=true)
      */
+    #[ORM\Column(type: 'string')]
     public $ndog;
 
     /**
@@ -180,6 +184,7 @@ class Orders
      *
      * @ORM\Column(name="midnight", type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer')]
     public $midnight;
 
     /**
@@ -187,6 +192,7 @@ class Orders
      *
      * @ORM\Column(name="site_order", type="integer", nullable=true)
      */
+    #[ORM\Column(type: 'integer')]
     public $siteOrder;
 
     /**
@@ -194,6 +200,7 @@ class Orders
      *
      * @ORM\Column(name="userorder", type="boolean", nullable=false, options={"comment"="Под ЗП"})
      */
+    #[ORM\Column(type: 'boolean')]
     public $userorder = '0';
 
     /**
@@ -201,6 +208,7 @@ class Orders
      *
      * @ORM\Column(name="_dt", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
+    #[ORM\Column(type: 'datetime_immutable')]
     public $dt = 'CURRENT_TIMESTAMP';
 
     public function getId(): ?int
@@ -508,12 +516,12 @@ class Orders
         return $this;
     }
 
-    public function getDt(): ?\DateTimeInterface
+    public function getDt(): ?\DateTimeImmutable
     {
         return $this->dt;
     }
 
-    public function setDt(\DateTimeInterface $dt): self
+    public function setDt(\DateTimeImmutable $dt): self
     {
         $this->dt = $dt;
 

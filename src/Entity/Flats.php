@@ -2,24 +2,21 @@
 
 namespace App\Entity;
 
+use App\Repository\FlatsRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-/**
- * Flats
- *
- * @ORM\Table(name="flats", uniqueConstraints={@ORM\UniqueConstraint(name="id_site", columns={"id_site"})})
- * @ORM\Entity(repositoryClass="App\Repository\FlatsRepository")
- */
+
+#[ORM\Entity(repositoryClass: FlatsRepository::class)]
+#[ORM\Table(name: 'flats')]
+#[UniqueEntity(fields: ['id_site'], message: 'There is already an account with this id_site')]
 class Flats
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
     /**
@@ -50,11 +47,8 @@ class Flats
      */
     public $kom;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="hidden", type="integer", nullable=false)
-     */
+
+    #[ORM\Column(type: 'integer')]
     public $hidden;
 
     /**

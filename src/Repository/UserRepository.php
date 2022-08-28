@@ -31,4 +31,33 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function findUsernameLike($value)
+    {
+        return $this->createQueryBuilder('u')
+                    ->andWhere('u.username LIKE :val')
+                    ->setParameter('val', '%' . $value . '%')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getArrayResult();
+    }
+
+    public function findNameLike($value)
+    {
+        return $this->createQueryBuilder('u')
+                    ->andWhere('u.name LIKE :val')
+                    ->setParameter('val', '%' . $value . '%')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getArrayResult();
+    }
+
+    public function findUsersByRole($role)
+    {
+        return $this->createQueryBuilder('u')
+                    ->where('u.roles LIKE :rol')
+                    ->setParameter('rol', '%"' . $role . '"%')
+                    ->getQuery()
+                    ->getResult();
+    }
 }
