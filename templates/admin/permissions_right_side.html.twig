@@ -1,0 +1,119 @@
+<div class="ui secondary menu">
+    {% for keyScope, scope in scopes %}
+        <a class="item" style="user-select: none"
+           data-tab="{{ userName }}_{{ keyScope }}">{{ scope }}</a>
+    {% endfor %}
+</div>
+{% for keyScope, scope in scopes %}
+    <div class="ui tab tabUserPermissions" data-tab="{{ userName }}_{{ keyScope }}">
+        {% if  permissions[userName][keyScope] ?? false %}
+            <div class="ui form">
+                <div class="inline fields">
+                    {% for permission in permissions[userName][keyScope] %}
+                        <div class="field">
+                            <div class="ui toggle checkbox">
+                                <input type="checkbox"
+                                       name="{{ userName }}-{{ permission.name }}"
+                                       {% if permission.active %}checked{% endif %}>
+                                <label>{{ permission.description }}</label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="ui message" style="text-align: center;">
+                <div class="header">
+                    Пусто
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+<div class="ui right floated green saveUserPermissions button" tabindex="0" data-username="{{ userName }}">
+    Сохранить
+</div>
+
+<script>
+    $('.secondary.menu .item').tab();
+    $('.saveUserPermissions').buttonClick(function (resolve, reject) {
+        let permissions = [];
+        let userName = $('.saveUserPermissions').data('username');
+
+        $.each($('.tabUserPermissions input[type="checkbox"]'), function () {
+            let name = $(this).attr('name').split('-');
+            if ($(this).is(':checked')) {
+                permissions.push(name[1])
+            }
+        })
+        console.log(permissions)
+        permissions = permissions.length === 0 ? [""] : permissions;
+        $.post("{{ path('admin_save_user_permissions') }}", {
+            userName: userName,
+            permissions: permissions
+        }, function (msg) {
+            if (msg) {
+                $('body').toast({
+                    position: 'bottom left',
+                    class: 'success',
+                    displayTime: 5000,
+                    message: 'Сохранено'
+                });
+            }
+            resolve(msg);
+
+        }).fail(function () {
+            $('body').toast({
+                position: 'bottom left',
+                class: 'error',
+                displayTime: 5000,
+                message: 'Ошибка сохранения'
+            });
+            reject(error)
+        })
+
+
+    });
+    {#$('.saveUserPermissions').on('click', function () {#}
+    {#    let button = $(this);#}
+    {#    button.addClass('elastic loading disabled');#}
+
+    {#    let permissions = [];#}
+    {#    let userName = $(this).data('username');#}
+
+    {#    $.each($('.tabUserPermissions input[type="checkbox"]'), function () {#}
+    {#        let name = $(this).attr('name').split('-');#}
+    {#        if ($(this).is(':checked')) {#}
+    {#            permissions.push(name[1])#}
+    {#        }#}
+    {#    })#}
+    {#    console.log(permissions)#}
+    {#    permissions = permissions.length === 0 ? [""] : permissions;#}
+    {#    $.post("{{ path('admin_save_user_permissions') }}", {#}
+    {#        userName: userName,#}
+    {#        permissions: permissions#}
+    {#    }, function (msg) {#}
+    {#        console.log(msg)#}
+    {#        if (msg) {#}
+    {#            $('body').toast({#}
+    {#                position: 'bottom left',#}
+    {#                class: 'success',#}
+    {#                displayTime: 5000,#}
+    {#                message: 'Сохранено'#}
+    {#            });#}
+    {#        }#}
+
+    {#    }).fail(function () {#}
+    {#        $('body').toast({#}
+    {#            position: 'bottom left',#}
+    {#            class: 'error',#}
+    {#            displayTime: 5000,#}
+    {#            message: 'Ошибка сохранения'#}
+    {#        });#}
+    {#    }).always(function () {#}
+    {#        button.removeClass('elastic loading disabled');#}
+    {#    })#}
+
+
+    {#})#}
+</script>

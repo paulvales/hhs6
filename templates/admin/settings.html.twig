@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+{% block header %}<h2 class="ui header center aligned">Настройки</h2>{% endblock %}
+{% block title %}Настройки - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="ui grid center aligned">
+        <dump>{{ dump(settings) }}</dump>
+        <div class="twelve wide column">
+            <div class="ui pointing secondary menu">
+                <a class="active item" data-tab="remont">Ремонт</a>
+                <a class="item" data-tab="regions">Районы</a>
+                <a class="item" data-tab="checklist">Чеклист</a>
+                <a class="item" data-tab="flat_tags">Квартира-теги</a>
+                <a class="item" data-tab="remont_tags">Ремонт-теги</a>
+            </div>
+            <div class="ui active tab segment" data-tab="remont">
+                <div class="ui form">
+                    <div class="inline fields">
+                        <label for="">Кому направлять ремонты?</label>
+                        {#                        Вывести ремонтников#}
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="user_r" checked="checked" value="0">
+                                <label>Завхоз</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="user_r" checked="checked" value="-1">
+                                <label>Отключить</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui tab segment" data-tab="regions">
+                <div class="ui centered grid">
+                    <div class="centered row">
+                        <div class="fourteen wide centered  column">
+                            <table class="ui very basic collapsing celled table" id="regions">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui tab segment" data-tab="checklist">
+                <div class="ui centered grid">
+                    <div class="centered row">
+                        <div class="fourteen wide centered  column">
+                            <table class="ui very basic collapsing celled table" id="checklist">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui tab segment" data-tab="flat_tags">
+                <div class="ui centered grid">
+                    <div class="centered row">
+                        <div class="fourteen wide centered  column">
+                            <table class="ui very basic collapsing celled table" id="tagsFlat">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui tab segment" data-tab="remont_tags">
+                <div class="ui centered grid">
+                    <div class="centered row">
+                        <div class="fourteen wide centered  column">
+                            <table class="ui very basic collapsing celled table" id="tagsRepair">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts2 %}
+    {{ parent() }}
+    <script>
+        let regions = JSON.parse('{{ regions|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}');
+        let checklist =  JSON.parse('{{ checklist|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}');
+        let tagsFlat =  JSON.parse('{{ tagsFlat|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}');
+        let tagsRepair =  JSON.parse('{{ tagsRepair|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}');
+console.log(regions)
+console.log(checklist)
+console.log(tagsFlat)
+console.log(tagsRepair)
+        $('.pointing.menu .item').tab();
+
+        let db = {
+            insertItem: function (item) {
+                console.log(item)
+                return $.ajax({
+                    type: "POST",
+                    url: '{{ path('item_add') }}',
+                    data: item
+                })
+            },
+
+            updateItem: function (item) {
+                console.log(item)
+                return $.ajax({
+                    type: "PUT",
+                    url: '{{ path('item_update') }}',
+                    data: item
+                })
+            },
+
+            deleteItem: function (item) {
+                return $.ajax({
+                    type: "DELETE",
+                    url: '{{ path('item_delete') }}',
+                    data: item
+                })
+            },
+        }
+
+        $("#regions").jsGrid({
+            width: "100%",
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            controller: db,
+            data: regions,
+            entity: 'region',
+
+            fields: [
+                {name: "name", title: 'Название', type: "text"},
+                {type: "control"}
+            ]
+        });
+
+        $("#checklist").jsGrid({
+            width: "100%",
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            controller: db,
+            data: checklist,
+            entity: 'checklist',
+
+            fields: [
+                {name: "name", title: 'Название', type: "text"},
+                {type: "control"}
+            ]
+        });
+
+        $("#tagsFlat").jsGrid({
+            width: "100%",
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            controller: db,
+            data: tagsFlat,
+            entity: 'tagsFlat',
+
+            fields: [
+                {name: "name", title: 'Название', type: "text"},
+                {type: "control"}
+            ]
+        });
+
+        $("#tagsRepair").jsGrid({
+            width: "100%",
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            controller: db,
+            data: tagsRepair,
+            entity: 'tagsRepair',
+
+            fields: [
+                {name: "name", title: 'Название', type: "text"},
+                {type: "control"}
+            ]
+        });
+    </script>
+
+{% endblock %}

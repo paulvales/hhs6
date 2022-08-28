@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}<h2 class="ui header center aligned">Доступы</h2>{% endblock %}
+{% block title %}Доступы - {{ parent() }}{% endblock %}
+{% block body %}
+    <div class="ui grid center aligned">
+        <div class="twelve wide column">
+            <div class="ui pointing secondary menu">
+                <a class="active item" data-tab="roles">Роли</a>
+                <a class="item" data-tab="users">Пользователи</a>
+            </div>
+            <div class="ui active tab segment" data-tab="roles">
+                <div class="ui grid">
+                    <div class="three wide column">
+                        <div class="ui vertical fluid tabular menu" style="height: 100%;">
+                            {% for role in roles %}
+                                <a class="item" data-tab="{{ role.name }}">{{ role.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="thirteen wide stretched column">
+                        {% for role in roles %}
+                            <div class="ui tab" data-tab="{{ role.name }}">
+                                <div class="ui secondary menu">
+                                    {% for keyScope, scope in scopes %}
+                                        <a class="item" style="user-select: none"
+                                           data-tab="{{ role.name }}_{{ keyScope }}">{{ scope }}</a>
+                                    {% endfor %}
+                                </div>
+                                {% for keyScope, scope in scopes %}
+                                    <div class="ui tab tabPermissions" data-tab="{{ role.name }}_{{ keyScope }}">
+                                        {% if  permissions_roles[role.name][keyScope] ?? false %}
+                                            <div class="ui form">
+                                                <div class="inline fields">
+                                                    {% for permission in permissions_roles[role.name][keyScope] %}
+                                                        <div class="field">
+                                                            <div class="ui toggle checkbox">
+                                                                <input type="checkbox"
+                                                                       name="{{ role.name }}-{{ permission.name }}"
+                                                                       {% if permission.active %}checked{% endif %}>
+                                                                <label>{{ permission.description }}</label>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="ui message" style="text-align: center;">
+                                                <div class="header">
+                                                    Пусто
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <div class="ui right floated green saveRolePermissions button" tabindex="0">Сохранить
+                                </div>
+
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui  tab segment" data-tab="users">
+                <div class="ui grid">
+                    <div class="three wide column">
+                        <div class="ui search fluid">
+                            <div class="ui left icon input fluid">
+                                <input class="prompt" type="text" placeholder="Поиск сотрудника">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="thirteen wide stretched column userPermissions">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts2 %}
+    {{ parent() }}
+    <script>
+        $('.pointing.menu .item').tab();
+        $('.secondary.menu .item').tab();
+        $('.tabular.menu .item').tab();
+        // $('.accordion').accordion();
+        $('.checkbox').checkbox();
+        $('.saveRolePermissions').buttonClick(function (resolve, reject) {
+            let data = {};
+            let tab = $('.saveRolePermissions').parent();
+            let role = tab.data('tab');
+            console.log(role)
+            data[role] = [];
+            $.each(tab.find('input[type="checkbox"]'), function () {
+                let name = $(this).attr('name').split('-');
+                if ($(this).is(':checked')) {
+                    data[role].push(name[1])
+                }
+            })
+            console.log(data[role].length)
+            data[role] = data[role].length === 0 ? [""] : data[role];
+            $.post("{{ path('admin_save_role_permissions') }}", data, function (msg) {
+                if (msg) {
+                    $('body').toast({
+                        position: 'bottom left',
+                        class: 'success',
+                        displayTime: 5000,
+                        message: 'Сохранено'
+                    });
+                }
+                resolve(msg)
+
+            }).fail(function (error) {
+                $('body').toast({
+                    position: 'bottom left',
+                    class: 'error',
+                    displayTime: 5000,
+                    message: 'Ошибка сохранения'
+                });
+                reject(error)
+            })
+        })
+
+        $('.ui.search')
+            .search({
+                apiSettings: {
+                    url: "{{ path('admin_find_user') }}?name={query}",
+                    onResponse: function (res) {
+                        // console.log(res)
+                    },
+                },
+                onSelect(user, response) {
+                    getUserPermissions(user.username)
+                },
+                fields: {
+                    title: 'name',
+                },
+                minCharacters: 3
+            })
+        ;
+
+        function getUserPermissions(userName) {
+            $.getJSON("{{ path('admin_get_user_permissions') }}", {userName: userName}, function (msg) {
+                console.log(msg)
+                $('.userPermissions').html(msg)
+            })
+        }
+
+    </script>
+{% endblock %}

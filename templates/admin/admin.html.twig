@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+{% block header %}<h2 class="ui header center aligned">Админ-панель</h2>{% endblock %}
+{% block body %}
+    <style>
+        .ui.card > a {
+            padding: 1em 1em;
+        }
+    </style>
+    <div class="ui container">
+        <div class="ui link cards">
+
+            <div class="ui card">
+                <a href="/users">
+                    <div class="content center aligned">
+
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Сотрудники
+                            </div>
+                            <div class="label">
+                                {{ count_users }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <div class="ui card">
+                <a href="/flats">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Квартиры
+                            </div>
+                            <div class="label">
+                                {{ count_flats }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="ui card">
+                <a href="/partners">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Партнеры
+                            </div>
+                            <div class="label">
+                                {{ count_partners }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="ui card">
+                <a href="/files">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Файлы
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="ui card">
+                <a href="/permissions">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Доступы
+                            </div>
+                            <div class="label">
+{#                                <i class="icon big cog"></i>#}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="ui card">
+                <a href="/settings">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Настройки
+                            </div>
+                            <div class="label">
+                                <i class="icon big cog"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="ui card">
+                <a href="/monolog-viewer">
+                    <div class="content center aligned">
+                        <div class="ui small statistic">
+                            <div class="text value">
+                                Системные логи
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

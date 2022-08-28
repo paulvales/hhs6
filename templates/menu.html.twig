@@ -1,0 +1,213 @@
+<div class="ui vertical inverted sidebar menu">
+    <a href="/admin" class="item" data-menu="cog" style="margin-right: 0;padding-left: .5em;
+    padding-right: 0;"><i class="icon cog"></i></a>
+    {% if  is_granted('ROLE_OPERATOR') or  is_granted('ROLE_ADMIN') %}
+        <div data-menu="Клиенты" onclick="location.href='{{ path('client_page') }}'" class="ui simple dropdown item">Клиент <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="клиенты" class="item">Список</a></div>
+        </div>
+    {% endif %}
+
+    <a href="/" class="item" data-menu="Уборка/Ремонт">Уборка/Ремонт</a>
+
+
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <div data-menu="квартиры" onclick="location.href='квартиры'" class="ui simple dropdown item">Квартиры <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="прайслисты" class="item">Прайсы</a></div>
+        </div>
+        <a href="задачи" class="item" data-menu="Задачи">Задачи
+            <div class="ui small label tasksMenu">
+                <tasksMenu class="animated3s infinite flash">0</tasksMenu>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if  is_granted('ROLE_ADMIN') %}
+        <a href="рейтинг" class="item" data-menu="Рейтинг">Рейтинг</a>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <a href="график" class="item" data-menu="График">График</a>
+    {% endif %}
+
+    {% if  is_granted('ROLE_ADMIN') %}
+        <div data-menu="Звонки" onclick="location.href='звонки'" class="ui simple dropdown item">Звонки <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="источники" class="item">Источники</a></div>
+        </div>
+        <div data-menu="Аналитика" onclick="location.href='хроника'" class="ui simple dropdown item">Аналитика <i
+                    class="dropdown icon"></i>
+            <div class="menu">
+                <a href="статистика" class="item">Статистика</a>
+                <a href="отчеты" class="item">Отчеты</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <a href="календарь" class="item" data-menu="Календарь">Календарь</a>
+
+    {% if is_granted('ROLE_PARTNER') or is_granted('ROLE_RECEIVER') %}
+        <div data-menu="Контроль" class="ui simple dropdown item">Контроль <i class="dropdown icon"></i>
+            <div class="menu"><a href="выездной-лист-1" class="item">Выездной лист</a>
+                {% if not is_granted('ROLE_PARTNER') %}
+                    <a href="выезды" class="item" data-menu="Выезды">Выезды</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if is_granted('ROLE_ACCOUNTANT') %}
+        <div data-menu="Бухгалтерия" onclick="location.href='бухгалтерия'" class="ui simple dropdown item">Бух <i
+                    class="dropdown icon"></i>
+            <div class="menu">
+                <a href="смены" class="item">Смены</a>
+                <a href="касса" class="item">Касса</a>
+                <a href="подзп" class="item">Под ЗП</a>
+            </div>
+        </div>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <a href="склад" class="item" data-menu="Склад">Склад</a>
+    {% endif %}
+
+    <div class="right menu" style="position: relative;">
+        <div class="item">
+
+            <a class="ui blue label" style="margin: 0;" href="/logout">{{ app.user.username }} <i class="icon delete"></i></a>
+
+        </div>
+
+    </div>
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <div class="ui simple dropdown item cashbox">
+            <h4>Касса:
+                <cash>0</cash>
+                | Долг
+                <debt>0</debt>
+            </h4>
+            <div class="menu">
+                <div class="item" onclick="$('.add_cash').modal('show')">
+                    <div class="ui green empty circular label"></div>
+                    Пополнить
+                </div>
+                <div class="item" onclick="modallift()">
+                    <div class="ui red empty circular label"></div>
+                    Снять
+                </div>
+                <div class="item" onclick="debtInfo()">
+                    <div class="ui black empty circular label"></div>
+                    Долги-подробнее
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+<div class="ui secondary menu" id="generalmenu">
+    <a class="toc item">
+        <i class="sidebar icon"></i>
+    </a>
+    <a href="/admin" class="item" data-menu="cog" style="margin-right: 0;padding-left: .5em;
+    padding-right: 0;"><i class="icon cog"></i></a>
+    {% if  is_granted('ROLE_OPERATOR') or  is_granted('ROLE_ADMIN') %}
+        <div data-menu="Клиенты" onclick="location.href='{{ path('client_page') }}'" class="ui simple dropdown item">Клиент <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="клиенты" class="item">Список</a></div>
+        </div>
+    {% endif %}
+
+    <a href="/" class="item" data-menu="Уборка/Ремонт">Уборка/Ремонт</a>
+
+
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <div data-menu="квартиры" onclick="location.href='квартиры'" class="ui simple dropdown item">Квартиры <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="прайслисты" class="item">Прайсы</a></div>
+        </div>
+        <a href="задачи" class="item" data-menu="Задачи">Задачи
+            <div class="ui small label tasksMenu">
+                <tasksMenu class="animated3s infinite flash">0</tasksMenu>
+            </div>
+        </a>
+    {% endif %}
+
+    {% if  is_granted('ROLE_ADMIN') %}
+        <a href="рейтинг" class="item" data-menu="Рейтинг">Рейтинг</a>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <a href="график" class="item" data-menu="График">График</a>
+    {% endif %}
+
+    {% if  is_granted('ROLE_ADMIN') %}
+        <div data-menu="Звонки" onclick="location.href='звонки'" class="ui simple dropdown item">Звонки <i
+                    class="dropdown icon"></i>
+            <div class="menu"><a href="источники" class="item">Источники</a></div>
+        </div>
+        <div data-menu="Аналитика" onclick="location.href='хроника'" class="ui simple dropdown item">Аналитика <i
+                    class="dropdown icon"></i>
+            <div class="menu">
+                <a href="статистика" class="item">Статистика</a>
+                <a href="отчеты" class="item">Отчеты</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <a href="календарь" class="item" data-menu="Календарь">Календарь</a>
+
+    {% if is_granted('ROLE_PARTNER') or is_granted('ROLE_RECEIVER') %}
+        <div data-menu="Контроль" class="ui simple dropdown item">Контроль <i class="dropdown icon"></i>
+            <div class="menu"><a href="выездной-лист-1" class="item">Выездной лист</a>
+                {% if not is_granted('ROLE_PARTNER') %}
+                    <a href="выезды" class="item" data-menu="Выезды">Выезды</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if is_granted('ROLE_ACCOUNTANT') %}
+        <div data-menu="Бухгалтерия" onclick="location.href='бухгалтерия'" class="ui simple dropdown item">Бух <i
+                    class="dropdown icon"></i>
+            <div class="menu">
+                <a href="смены" class="item">Смены</a>
+                <a href="касса" class="item">Касса</a>
+                <a href="подзп" class="item">Под ЗП</a>
+            </div>
+        </div>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <a href="склад" class="item" data-menu="Склад">Склад</a>
+    {% endif %}
+
+    <div class="right menu" style="position: relative;">
+        <div class="item">
+
+               <a class="ui blue label" style="margin: 0;" href="/logout">{{ app.user.username }} <i class="icon delete"></i></a>
+
+        </div>
+
+    </div>
+    {% if is_granted('ROLE_ADMIN') or not is_granted('ROLE_PARTNER') %}
+        <div class="ui simple dropdown item cashbox">
+            <h4>Касса:
+                <cash>0</cash>
+                | Долг
+                <debt>0</debt>
+            </h4>
+            <div class="menu">
+                <div class="item" onclick="$('.add_cash').modal('show')">
+                    <div class="ui green empty circular label"></div>
+                    Пополнить
+                </div>
+                <div class="item" onclick="modallift()">
+                    <div class="ui red empty circular label"></div>
+                    Снять
+                </div>
+                <div class="item" onclick="debtInfo()">
+                    <div class="ui black empty circular label"></div>
+                    Долги-подробнее
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

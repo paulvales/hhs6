@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+{% block header %}<h2 class="ui header center aligned">Квартиры</h2>{% endblock %}
+{% block title %}Квартиры - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="ui grid center aligned">
+        <div class="twelve wide column">
+            <table id="flats" class="ui table selectable striped display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Адрес</th>
+                    <th>Описание</th>
+                    <th>Комнат</th>
+                    <th>Цена</th>
+                    <th>Партнер</th>
+                    <th>Скрыта</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="ui modal" id="editFlatModal">
+        <i class="close icon"></i>
+        <div class="header">
+            Квартира
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <input type="hidden" name="id" id="id">
+                <div class="field">
+                    <label>Адрес</label>
+                    <input type="text" name="adres" id="adres" placeholder="Адрес">
+                </div>
+                <div class="field">
+                    <label>Адрес для смс</label>
+                    <input type="text" name="adresSms" id="adresSms" placeholder="Адрес для смс">
+                </div>
+                <div class="field">
+                    <label>Описание</label>
+                    <textarea name="descr" id="descr" cols="30" rows="2" placeholder="Описание"></textarea>
+                </div>
+                <div class="field">
+                    <label>Количество комнат</label>
+                    <input type="number" name="kom" id="kom">
+                </div>
+                <div class="field">
+                    <label>Цена за сутки</label>
+                    <input type="text" name="priceday" id="priceday" placeholder="Цена за сутки">
+                </div>
+                <div class="field">
+                    <label>Район</label>
+                    <input type="text" name="region" id="region" placeholder="Район">
+                </div>
+                <div class="field">
+                    <label>ИД на сайте</label>
+                    <input type="text" name="idSite" id="idSite" placeholder="ИД на сайте">
+                </div>
+                <div class="field">
+                    <label>Телефон</label>
+                    <input type="text" name="phone" id="phone" class="phone" placeholder="Телефон">
+                </div>
+                <div class="field">
+                    <label>Партнер</label>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="partner" id="partner">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Партнер</div>
+                        <div class="menu">
+                            {% for partner in partners %}
+                                <div class="item" data-value="{{ partner.id }}">{{ partner.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Скрыт</label>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="hidden" id="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Скрыт ?</div>
+                        <div class="menu">
+                            <div class="item" data-value="1">Да</div>
+                            <div class="item" data-value="0">Нет</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="ui positive button right floated saveFlat">Сохранить</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts2 %}
+    {{ parent() }}
+    <script>
+        let getFlatsPath = '{{ path('admin_get_flats') }}';
+        let saveFlatPath = '{{ path('admin_save_flat') }}';
+        let accessFlatsEdit =  {% if is_granted("FLATS_EDIT") %}1{% else %}0{% endif %};
+        let flats = {};
+    </script>
+    {{ encore_entry_script_tags('flats') }}
+{% endblock %}
+
+
+

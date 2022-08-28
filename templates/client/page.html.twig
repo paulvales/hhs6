@@ -1,0 +1,563 @@
+{% extends 'base.html.twig' %}
+{% block header %}{% endblock %}
+{% block title %}{{ client.fio ?: 'Клиент' }} - {{ parent() }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('client_page_css') }}
+{% endblock %}
+
+{% block body %}
+
+    <dump> {{ dump(orders) }}</dump>
+    <div class="ui inverted dimmer lll">
+        <div class="ui large text loader">Загрузка ...</div>
+    </div>
+    <style>
+        .ui.button.blockClient, .ui.button.unBlockClient, #clientInfo {
+            display: none;
+        }
+    </style>
+    <div id="clientInfo" class="ui fluid container" style="padding: 1% 2% 0;">
+        <div class="ui stackable grid">
+            <div class="three wide column" id="leftside">
+
+                <div class="ui form" id="clientInfoForm" autocomplete="off" style="padding: 1rem 1.4rem;">
+                    <div>
+                        <div style="margin-bottom: 2em;">
+                            <div class="ui field" style="float: left;    width: 27%;">
+                                <div class="ui tiny image">
+                                    <div class="blurring dimmable image">
+                                        <div class="ui dimmer rounded">
+                                            <div class="content">
+                                                <div class="center">
+                                                    <i class="large link camera green icon" onclick="camera()"></i>
+                                                    <i class="large link search plus blue icon"
+                                                       onclick="$('#photoImage').trigger('click')"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img src="{{ client.photo ?: no_image }}"
+                                             class="photo ui rounded image imgShow" id="photoImage"
+                                             style="width: 80px;    height: 60px;">
+
+                                    </div>
+                                </div>
+                                <input type="hidden" id="photo">
+                            </div>
+                            <div class="ui search fio field"
+                                 style="display: inline-block;;clear: unset;width: 73%;    margin-top: 1.4rem;">
+                                <input class="prompt" type="text" name="fio" id="fio"
+                                       placeholder="Фамилия Имя Отчество" value="{{ client.fio ?? '' }}"
+                                       required
+                                       style="font-weight: 500;">
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                        <div class="ui field blacklist">
+                            <h3 class="ui red header center aligned">Клиент в черном списке</h3>
+                        </div>
+                        <div class="ui search phonesearch field">
+                            <input type="text" name="phone" id="phone" class="phone prompt"
+                                   placeholder="+7 (999) 999-9999"
+                                   value="{{ client.phone ?? '+7' }}" required>
+                            <div class="results"></div>
+                        </div>
+
+
+                        <div class="ui search iin field">
+                            <input class="prompt" type="text" name="iin" id="iin"
+                                   placeholder="И И Н" value="{{ client.iin ?? '' }}" required>
+                            <div class="results"></div>
+                        </div>
+                        <div class="ui search cardNumber field">
+                            <input class="prompt" type="text" name="loyal_number" id="loyal_number"
+                                   placeholder="Номер карты" value="{{ client.loyal_number ?? '' }}"
+                                   autocomplete="new-password">
+                            <div class="results"></div>
+                        </div>
+                        <div class="field">
+                            <div class="ui input">
+                                <input type="email" name="email" id="email" placeholder="Email"
+                                       value="{{ client.email ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="ui search phonesearch2 field">
+                            <input type="text" name="phone_2" id="phone_2"
+                                   placeholder="Доп. телефон" class="phone prompt"
+                                   value="{{ client.phone_2 ?? '' }}">
+                            <div class="results"></div>
+                        </div>
+                        <div class="three wide column"></div>
+                        <div class="nine wide column" style="padding-left: 0;">
+                            <h5 class="ui header" style="margin: 0;">Откуда приехал клиент?</h5>
+                            <div class="field">
+                                <div class="ui search place">
+                                    <input class="prompt" type="text" name="from_place" id="from_place"
+                                           placeholder="Город, поселок, район" value="{{ client.from_place ?? '' }}"
+                                           required>
+                                    <div class="results"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="ui seven wide column form" style="margin-top: 1em;">
+                            <h5 class="ui header" style="margin: 0;">Рабочие контакты</h5>
+                            <div class="field">
+                                <div class="ui input">
+                                    <input type="text" name="company" id="company" placeholder="Компания"
+                                           value="{{ client.company ?? '' }}"></div>
+                            </div>
+                            <div class="field">
+                                <div class="ui input">
+                                    <input type="text" class="phone" name="contact" id="contact"
+                                           placeholder="Телефон" value="{{ client.contact ?? '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if is_granted("ROLE_ADMIN") or is_granted("CLIENT_EDIT") %}
+                        <div class="row" style="text-align: center;padding: 0.5rem;">
+                            <span style="color: #a0a0a0">Создано - <create>{{ client.dt ? client.dt|date("d.m.Y"):'' }}</create></span>
+                            <span style="color: #a0a0a0">Изменено - <upd>{{ client.upd ?:'' }}</upd></span>
+                        </div>
+                    {% endif %}
+                </div>
+
+
+                <div class="ui two bottom attached buttons infoActions">
+                    <button class="ui mini black button blockClient" onclick="blockClient(1)">Заблокировать</button>
+                    <button class="ui mini black button unBlockClient" onclick="blockClient(0)">Разблокировать</button>
+                    {% if is_granted("ROLE_ADMIN") or is_granted("CLIENT_EDIT") %}
+                        <button class="ui  mini blue button saveClient right floated" onclick="saveClient()">Сохранить
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            {#Правая часть#}
+            <div class="thirteen wide column" id="rightside">
+
+                <div class="ui top attached tab active" data-tab="orders">
+                    <div class="viewOrder">
+                        <div class="contentOrder">
+                            <div class="header">
+                                <h2 class="ui header" style="display: inline-flex;margin: 0;">
+                                    <i class="back angle left icon link" style="width: 1rem;margin-right: 1rem;"></i>
+                                    <orderAddress></orderAddress>
+                                </h2>
+                                <div class="headerLabels">
+                                    <div class="ui compact mini dropdown button operatorsDropdown">
+                                        <input type="hidden" name="client_of" id="client_of">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Чей клиент</div>
+                                        <div class="menu">
+                                            {% for operator in operators %}
+                                                <div class="item"
+                                                     data-value="{{ operator.id }}">{{ operator.name }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="ui label tiny dtCreate" title="Дата создания"></div>
+                                    <div class="ui label tiny numberAgreement" title="Номер договора"></div>
+                                </div>
+                            </div>
+                            <div class="ui form" style="margin-top: 2rem;">
+                                <div class="fields">
+                                    <div class="field">
+                                        <label>Заезд</label>
+                                        <input type="text" placeholder="Заезд" id="arrival">
+                                    </div>
+                                    <div class="field">
+                                        <label>Выезд</label>
+                                        <input type="text" placeholder="Выезд" id="departure">
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui mini statistic" style="padding-top: .9rem;">
+                                            <div class="value">
+                                                <days></days>
+                                            </div>
+                                            <div class="label">дн</div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <label>Цена</label>
+                                        <input type="text" placeholder="Цена" id="priceday">
+                                    </div>
+                                    <div class="field">
+                                        <label>Итого</label>
+                                        <input type="text" placeholder="Итого" id="total">
+                                    </div>
+                                    <div class="field">
+                                        <label>Долг</label>
+                                        <input type="text" placeholder="Долг" id="debt">
+                                    </div>
+
+                                </div>
+                                <div class="ui right floated">
+                                    <button class="ui pink button" onclick="$('#modal_trans').modal('show')">Перенос
+                                    </button>
+                                    <button class="ui instagram button" onclick="smenaKv()">Смена КВ</button>
+                                    <button class="ui button green">Сохранить</button>
+                                </div>
+
+                            </div>
+
+                            <div class="ui form"  style="margin-top: 2rem;">
+                                <h3 class="ui header">
+                                    Оплаты
+                                </h3>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <table class="ui table single line striped very basic compact selectable " id="orders">
+                            <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Проживание</th>
+                                <th>Продолжит</th>
+                                <th>Адрес</th>
+                                <th>Сумма</th>
+                                <th>Долг</th>
+                                <th>Заселен</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in orders %}
+                                <tr class="green " role="row" data-id="{{ order.id }}">
+                                    <td>{{ order.dt|date(dt_format) }}</td>
+                                    <td>{{ order.arrival|date(dt_format) }} - {{ order.departure|date(dt_format) }}</td>
+                                    <td>2 дн (42 часов)</td>
+                                    <td>{{ order.adres }}</td>
+                                    <td>{{ order.itogo }}</td>
+                                    <td>{{ order.dolg }}</td>
+                                    <td>
+                                        <button class="ui green button compact" onclick="ok({{ order.id }})">Да</button>
+                                        <button class="ui button compact" onclick="delhis({{ order.id }},'orders')">
+                                            Нет
+                                        </button>
+                                        <button class="ui icon blue button compact"
+                                                onclick="shareOrderModal({{ order.id }})"><i
+                                                    class="share alternate icon"></i></button>
+                                        {% if is_granted("ROLE_ADMIN") %}
+                                            <button class="ui button compact" onclick="delorder({{ order.id }})">X
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="ui top attached tab" data-tab="hronica">
+                    <h2 class="ui header">Хроника</h2>
+                </div>
+
+                <div class="ui bottom attached tabular menu">
+                    <div class="item" data-tab="orders"><i class="home icon"></i> Заселения</div>
+                    <div class="item active" data-tab="hronica">Хроника</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui modal" id="camera" style="background: none;box-shadow: none;">
+        <i class="close icon"></i>
+        <div class="content" style="background: none;">
+            <div class="ui video rounded image">
+                <div class="ui active loader" style="left: 25%;"></div>
+
+                <div class="camera">
+                    <video id="video" style="margin: 0 auto;display: block;    border-radius: .5rem;">Видеопоток не
+                        включен
+                    </video>
+                </div>
+
+            </div>
+            <div style="position: absolute;bottom: 4em;left: 38%;">
+                <button type='button' id='snapshot' class="ui labeled icon yellow button stop"><i
+                            class="photo icon"></i>
+                    Сфотографировать
+                </button>
+            </div>
+            <div class="can hide">
+                <canvas class="ui rounded image" id='canvas'></canvas>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts2 %}
+    {{ parent() }}
+    <script>
+        $('#rightside .menu .item').tab();
+        $('.operatorsDropdown').dropdown();
+        /**
+         * @property {number} blacklist
+         * @property {string} city
+         * @property {string} company
+         * @property {string} contact
+         * @property {number} create
+         * @property {string} doc1
+         * @property {string} doc2
+         * @property {object} dt
+         * @property {string} email
+         * @property {string} fio
+         * @property {string} fromGo
+         * @property {string} fromPlace
+         * @property {number} id
+         * @property {string} iin
+         * @property {string} loyalNumber
+         * @property {string} phone
+         * @property {string} phone2
+         * @property {string} photo
+         * @property {string} status
+         * @property {number} upd
+         */
+        let client = JSON.parse('{{ client|json_encode()|raw }}');
+        let clientNew = {};
+        let clientID = {{ client.id ?? 0 }};
+        if (client.id) {
+            clientNew.id = client.id;
+            if (client.blacklist) {
+
+                $('.ui.button.unBlockClient, .blacklist').show();
+            } else {
+                $('.ui.button.blockClient').show();
+            }
+
+        }
+
+        let orders = JSON.parse('{{ orders|json_encode()|raw }}');
+        console.log(orders)
+
+        $('.dimmable.image').dimmer({
+            on: 'hover',
+            duration: {
+                show: 300,
+                hide: 100
+            }
+        });
+        $('.phone').mask(phoneFormat);
+
+        $('.fio').search({
+            minCharacters: 3,
+            apiSettings: {
+                url: '{{ path('client_search') }}/fio/{query}'
+            },
+            onSelect: function (result) {
+                $("#checkdouble").val(0);
+                $('#clientInfo').fadeOut()
+                window.location.href = '{{ path('client_page') }}/' + result.id;
+            },
+            fields: {
+                title: 'fio',
+                description: 'iin'
+            }
+        });
+
+        $('.iin').search({
+            minCharacters: 7,
+            apiSettings: {
+                url: '{{ path('client_search') }}/iin/{query}'
+            },
+            onSelect: function (result) {
+                $("#checkdouble").val(0);
+                window.location.href = '{{ path('client_page') }}/' + result.id;
+            },
+            fields: {
+                title: 'fio',
+                description: 'iin'
+            }
+        });
+
+        $('.phonesearch').search({
+            minCharacters: 7,
+            apiSettings: {
+                url: '{{ path('client_search') }}/phone/{query}'
+            },
+            onSelect: function (result) {
+                $("#checkdouble").val(0);
+                window.location.href = '{{ path('client_page') }}/' + result.id;
+            },
+            fields: {
+                title: 'fio',
+                description: 'phone'
+            }
+        });
+
+        $('#clientInfoForm input').on('change', function () {
+            let field = $(this).attr('id');
+            clientNew[field] = $(this).val();
+            $(this).addClass('change');
+        })
+
+        function updateClient() {
+            let inputs = $('#clientInfoForm .change');
+            $.each(inputs, function () {
+                let field = $(this).attr('id') || $(this).attr('name');
+                clientNew[field] = $(this).val();
+            })
+            console.log(clientNew)
+        }
+
+
+        var width = 720;
+        var height = 0;
+
+
+        var streaming = false;
+
+
+        var video = null;
+        var canvas = null;
+        var photo = null;
+        var photoNew = null;
+        var startbutton = null;
+
+        function camera() {
+            $("#camera .loader").show();
+            $('#camera').modal({
+                closable: false
+            }).modal('show');
+            video = document.getElementById('video');
+            canvas = document.getElementById('canvas');
+            photo = document.getElementById('photoImage');
+            photoNew = $('#photo');
+            startbutton = document.getElementById('snapshot');
+
+            navigator.mediaDevices.getUserMedia({video: true, audio: false})
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    $("#camera .loader").fadeOut();
+                    $(".close.icon").on("click", function () {
+                        video.pause();
+                        video.src = "";
+                        stream.getVideoTracks()[0].stop();
+                    })
+                })
+                .catch(function (err) {
+                    console.log("An error occurred: " + err);
+                });
+
+            video.addEventListener('canplay', function (ev) {
+                if (!streaming) {
+                    height = video.videoHeight / (video.videoWidth / width);
+                    if (isNaN(height)) {
+                        height = width / (4 / 3);
+                    }
+
+                    video.setAttribute('width', width);
+                    video.setAttribute('height', height);
+                    canvas.setAttribute('width', width);
+                    canvas.setAttribute('height', height);
+                    streaming = true;
+                }
+            }, false);
+
+            startbutton.addEventListener('click', function (ev) {
+                var context = canvas.getContext('2d');
+                if (width && height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                    context.drawImage(video, 0, 0, width, height);
+
+                    var data = canvas.toDataURL('image/png');
+                    photo.setAttribute('src', data);
+                    photoNew.val(data);
+                    photoNew.addClass('change');
+                } else {
+                    clearphoto();
+                }
+                ev.preventDefault();
+            }, false);
+
+        }
+
+
+        function clearphoto() {
+            var context = canvas.getContext('2d');
+            context.fillStyle = "#AAA";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            var data = canvas.toDataURL('image/png');
+            photo.setAttribute('src', data);
+        }
+
+        function saveClient() {
+            updateClient();
+            $.post('{{ path('client_save') }}', clientNew, function (r) {
+                if (r) {
+                    $().msgok();
+                } else {
+                    $().msgerr();
+                }
+
+            })
+        }
+
+        function blockClient(hide) {
+            $.post('{{ path('client_save') }}', {id: clientID, blacklist: hide}, function (r) {
+                if (r) {
+                    $().msgok();
+                    location.reload();
+                } else {
+                    $().msgerr();
+                }
+
+            })
+        }
+
+
+        {% if is_granted("ROLE_ADMIN") or is_granted("ORDER_EDIT") %}
+        $('#arrival').flatpickr({enableTime: true});
+        $('#departure').flatpickr({enableTime: true});
+
+        $('#orders tr').on('click', function () {
+            let order = $().findID(orders, $(this).data('id'));
+            console.log(order)
+            $('orderAddress').text(order.adres);
+            $('.numberAgreement').text('#' + order.ndog);
+            $('.dtCreate').text(moment(order.dt.date).format(dtFormat));
+
+            $('#arrival')[0]._flatpickr.setDate(moment(order.arrival.date).format(dtFormat));
+            $('#departure')[0]._flatpickr.setDate(moment(order.arrival.date).format(dtFormat));
+
+            $('#priceday').val(order.priceday);
+            $('#total').val(order.itogo);
+            $('#debt').val(order.dolg);
+            $('days').text(1);
+
+            $('.viewOrder').addClass('open')
+            $('.viewOrder').animate({
+                height: "92%",
+                width: "98%"
+            }, 300, function () {
+                $('.viewOrder .contentOrder').fadeIn('fast')
+            });
+            $('.operatorsDropdown').dropdown('set selected', order.ot || order.user)
+        })
+        {% endif %}
+
+        $('.viewOrder .back').on('click', function () {
+            $('.viewOrder').removeClass('open');
+            $('.viewOrder .contentOrder').hide();
+            $('.viewOrder').css({'height': 0});
+            $('.viewOrder').css({'width': 0});
+        })
+
+
+        $(function () {
+            $('#clientInfo').fadeIn();
+            if (!client.id) {
+                $('#fio').focus();
+            }
+        })
+    </script>
+{% endblock %}
