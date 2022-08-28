@@ -3,6 +3,12 @@ twig:
     form_themes:
         - 'form/layout.html.twig'
         - 'form/fields.html.twig'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    exception_controller: null
+    globals:
+        no_image: '/img/image.png'
+        dt_format: 'd/m/Y H:i'
 
 when@test:
     twig:

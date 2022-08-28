@@ -11,6 +11,8 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
+    .cleanupOutputBeforeBuild()
+    .autoProvidejQuery()
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
@@ -25,6 +27,13 @@ Encore
     .addEntry('admin', './assets/admin.js')
     .addEntry('search', './assets/search.js')
 
+    .addEntry('login_css', './assets/styles/login.css')
+    .addEntry('fomantic_styles', './assets/fomantic/dist/semantic.min.css')
+    .addEntry('fomantic_javascripts', './assets/fomantic/dist/semantic.min.js')
+    .addEntry('users', './assets/js/users.js')
+    .addEntry('flats', './assets/js/flats.js')
+    .addEntry('font_roboto', './assets/fonts/roboto/stylesheet.css')
+    .addEntry('client_page_css', './assets/styles/clientPage.css')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 
